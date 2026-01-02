@@ -336,7 +336,7 @@
           <textarea id="question" placeholder="Tape ta question ici…"></textarea>
 
           <div class="row">
-            <button class="btnPrimary" id="sendBtn" onclick="ask()">Envoyer</button>
+            <button class="btnPrimary" id="sendBtn" type="button">Envoyer</button>
             <button onclick="fillExample()">Mettre un exemple</button>
             <span class="status" id="status"></span>
           </div>
@@ -454,6 +454,19 @@
         feedback.textContent = "❌ Pas tout à fait. Retient surtout : l’IA peut se tromper, et plus tu donnes un bon contexte, mieux elle répond.";
       }
     }
+    document.addEventListener("DOMContentLoaded", () => {
+  const btn = document.getElementById("sendBtn");
+  if (btn) {
+    btn.addEventListener("click", () => {
+      console.log("Bouton cliqué"); // pour test
+      ask();
+    });
+  } else {
+    console.error("Bouton sendBtn introuvable");
+  }
+});
+
   </script>
 </body>
 </html>
+
