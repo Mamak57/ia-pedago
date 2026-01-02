@@ -1,0 +1,459 @@
+<!doctype html>
+<html lang="fr">
+<head>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
+  <title>Comprendre l’IA (sans prise de tête)</title>
+  <meta name="description" content="Une page simple pour comprendre l’IA, avec exemples, quiz et un assistant pour poser tes questions." />
+  <style>
+    :root{
+      --bg:#0b1020;
+      --card:#111a33;
+      --card2:#0f1730;
+      --text:#e8ecff;
+      --muted:#b9c2ff;
+      --accent:#7c5cff;
+      --accent2:#2de2e6;
+      --danger:#ff4d6d;
+      --ok:#2bd576;
+      --shadow: 0 10px 30px rgba(0,0,0,.35);
+      --radius: 18px;
+      --radius2: 12px;
+    }
+    *{box-sizing:border-box}
+    body{
+      margin:0;
+      font-family: system-ui, -apple-system, Segoe UI, Roboto, Arial, sans-serif;
+      background: radial-gradient(1200px 600px at 20% 10%, rgba(124,92,255,.25), transparent 60%),
+                  radial-gradient(900px 600px at 80% 20%, rgba(45,226,230,.20), transparent 55%),
+                  linear-gradient(180deg, var(--bg), #070a14 70%);
+      color:var(--text);
+      line-height:1.45;
+    }
+    a{color:var(--accent2); text-decoration:none}
+    a:hover{text-decoration:underline}
+    .wrap{max-width: 980px; margin: 0 auto; padding: 24px 16px 60px}
+    header{
+      display:flex; gap:16px; align-items:flex-start; justify-content:space-between; flex-wrap:wrap;
+      margin: 10px 0 18px;
+    }
+    .hero{
+      flex:1 1 520px;
+      padding: 18px 18px 6px;
+      background: linear-gradient(135deg, rgba(124,92,255,.20), rgba(45,226,230,.10));
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+    }
+    .badge{
+      display:inline-flex; align-items:center; gap:8px;
+      padding: 8px 12px;
+      border-radius: 999px;
+      background: rgba(255,255,255,.06);
+      border: 1px solid rgba(255,255,255,.10);
+      color: var(--muted);
+      font-size: 13px;
+    }
+    h1{
+      margin: 10px 0 10px;
+      font-size: clamp(22px, 4vw, 34px);
+      line-height:1.1;
+    }
+    .sub{
+      color: var(--muted);
+      margin: 0 0 14px;
+      font-size: 15px;
+      max-width: 70ch;
+    }
+    .ctaRow{display:flex; gap:10px; flex-wrap:wrap; padding: 10px 0 14px}
+    button, .btn{
+      border:0;
+      cursor:pointer;
+      padding: 12px 14px;
+      border-radius: 12px;
+      font-weight: 650;
+      background: rgba(255,255,255,.08);
+      color: var(--text);
+      border: 1px solid rgba(255,255,255,.12);
+      transition: transform .06s ease, background .2s ease, border-color .2s ease;
+      user-select:none;
+    }
+    button:hover, .btn:hover{background: rgba(255,255,255,.12); border-color: rgba(255,255,255,.18)}
+    button:active, .btn:active{transform: translateY(1px)}
+    .btnPrimary{
+      background: linear-gradient(135deg, var(--accent), rgba(45,226,230,.75));
+      border-color: rgba(255,255,255,.22);
+      color: #091022;
+    }
+    .grid{
+      display:grid;
+      grid-template-columns: 1.2fr .8fr;
+      gap: 14px;
+      margin-top: 14px;
+    }
+    @media (max-width: 860px){
+      .grid{grid-template-columns: 1fr}
+    }
+    .card{
+      background: linear-gradient(180deg, rgba(255,255,255,.05), rgba(255,255,255,.03));
+      border: 1px solid rgba(255,255,255,.10);
+      border-radius: var(--radius);
+      box-shadow: var(--shadow);
+      overflow:hidden;
+    }
+    .card .in{padding: 16px}
+    .card h2{margin:0 0 8px; font-size: 18px}
+    .card p{margin: 0 0 10px; color: var(--muted)}
+    .list{
+      margin: 10px 0 0;
+      padding: 0;
+      list-style:none;
+      display:grid;
+      gap:10px;
+    }
+    .li{
+      padding: 12px;
+      border-radius: var(--radius2);
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.08);
+    }
+    .li b{color:var(--text)}
+    .pill{
+      display:inline-block;
+      font-size: 12px;
+      padding: 4px 10px;
+      border-radius: 999px;
+      background: rgba(124,92,255,.18);
+      border: 1px solid rgba(124,92,255,.35);
+      color: var(--muted);
+      margin-right: 8px;
+      white-space:nowrap;
+    }
+    .hr{height:1px; background: rgba(255,255,255,.10); margin: 14px 0}
+    .qa{
+      display:grid;
+      gap: 10px;
+    }
+    textarea{
+      width:100%;
+      min-height: 92px;
+      resize: vertical;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.14);
+      background: rgba(0,0,0,.20);
+      color: var(--text);
+      outline: none;
+      font-size: 15px;
+    }
+    textarea:focus{border-color: rgba(45,226,230,.55)}
+    .row{display:flex; gap:10px; flex-wrap:wrap; align-items:center}
+    .muted{color: var(--muted); font-size: 13px}
+    .answer{
+      white-space: pre-wrap;
+      padding: 12px 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.12);
+      background: rgba(0,0,0,.20);
+      min-height: 64px;
+    }
+    .status{font-size: 13px}
+    .status.ok{color: var(--ok)}
+    .status.err{color: var(--danger)}
+    .spinner{
+      width: 14px; height: 14px;
+      border-radius: 50%;
+      border: 2px solid rgba(255,255,255,.25);
+      border-top-color: rgba(45,226,230,.9);
+      display:inline-block;
+      animation: spin .8s linear infinite;
+      vertical-align:-2px;
+      margin-right: 8px;
+    }
+    @keyframes spin{to{transform: rotate(360deg)}}
+    details{
+      background: rgba(0,0,0,.18);
+      border: 1px solid rgba(255,255,255,.08);
+      border-radius: 14px;
+      padding: 10px 12px;
+    }
+    summary{cursor:pointer; font-weight:650}
+    .quiz{
+      display:grid;
+      gap:10px;
+      margin-top: 10px;
+    }
+    .q{
+      padding: 12px;
+      border-radius: 14px;
+      border: 1px solid rgba(255,255,255,.10);
+      background: rgba(0,0,0,.18);
+    }
+    .opt{display:flex; gap:10px; flex-wrap:wrap; margin-top: 10px}
+    .opt button{font-weight:650}
+    footer{margin-top: 18px; color: rgba(255,255,255,.55); font-size: 12px}
+    code{font-family: ui-monospace, SFMono-Regular, Menlo, Consolas, monospace; font-size: .95em}
+  </style>
+</head>
+<body>
+  <div class="wrap">
+    <header>
+      <div class="hero">
+        <div class="badge">🧠 IA pour humains normaux • version “famille & amis”</div>
+        <h1>Comprendre l’IA, sans jargon et sans panique</h1>
+        <p class="sub">
+          L’IA (type ChatGPT) n’est ni magique, ni consciente. C’est un outil très fort pour
+          <b>résumer</b>, <b>expliquer</b>, <b>générer des idées</b> et <b>aider</b>… à condition de savoir lui parler.
+        </p>
+        <div class="ctaRow">
+          <button class="btnPrimary" onclick="document.getElementById('ask').scrollIntoView({behavior:'smooth'})">Poser une question</button>
+          <button onclick="document.getElementById('tips').scrollIntoView({behavior:'smooth'})">Voir les bons réflexes</button>
+          <button onclick="document.getElementById('quiz').scrollIntoView({behavior:'smooth'})">Faire le mini-quiz</button>
+        </div>
+      </div>
+    </header>
+
+    <div class="grid">
+      <section class="card">
+        <div class="in">
+          <h2>En 30 secondes : c’est quoi, l’IA “conversationnelle” ?</h2>
+          <p>
+            Imagine une <b>machine à compléter du texte</b> ultra-entraînée. Elle a lu énormément d’exemples,
+            donc elle est douée pour <b>deviner la suite la plus probable</b>… et ça donne des réponses souvent très convaincantes.
+          </p>
+          <ul class="list">
+            <li class="li"><span class="pill">✅</span><b>Très forte</b> pour expliquer simplement, reformuler, écrire, structurer, traduire, brainstormer.</li>
+            <li class="li"><span class="pill">⚠️</span><b>Peut se tromper</b> avec aplomb (hallucinations) : elle peut inventer des détails si tu ne la recadres pas.</li>
+            <li class="li"><span class="pill">🧩</span><b>Elle n’a pas “d’intuition”</b> : elle calcule des probabilités à partir de ce qu’elle a appris.</li>
+          </ul>
+
+          <div class="hr"></div>
+
+          <h2>Ce que l’IA n’est pas (désolé)</h2>
+          <ul class="list">
+            <li class="li">❌ Un humain : pas d’émotions, pas de volonté, pas de conscience.</li>
+            <li class="li">❌ Un oracle : si tu veux des faits (dates, chiffres, sources), il faut <b>vérifier</b>.</li>
+            <li class="li">❌ Un juge : elle ne “sait” pas ce qui est vrai, elle “propose” ce qui a l’air plausible.</li>
+          </ul>
+        </div>
+      </section>
+
+      <aside class="card">
+        <div class="in">
+          <h2>Exemples utiles (vraiment)</h2>
+          <p>Essaie de copier-coller une phrase ci-dessous dans “Pose ta question”.</p>
+          <ul class="list">
+            <li class="li"><b>Comprendre :</b><br><span class="muted">“Explique-moi la différence entre wifi et 4G comme si j’avais 12 ans.”</span></li>
+            <li class="li"><b>Décider :</b><br><span class="muted">“Aide-moi à comparer deux options : A vs B, avec avantages/inconvénients.”</span></li>
+            <li class="li"><b>Écrire :</b><br><span class="muted">“Rédige un message poli pour refuser une invitation, ton simple.”</span></li>
+            <li class="li"><b>Apprendre :</b><br><span class="muted">“Fais-moi un plan d’apprentissage sur 7 jours pour comprendre l’IA.”</span></li>
+          </ul>
+
+          <div class="hr"></div>
+
+          <details>
+            <summary>⚠️ Petite règle de base (hyper importante)</summary>
+            <p class="muted" style="margin-top:8px">
+              Si c’est <b>important</b> (santé, juridique, argent, sécurité, infos sensibles), l’IA peut aider à comprendre…
+              mais on <b>vérifie</b> et on ne donne pas des données perso.
+            </p>
+          </details>
+        </div>
+      </aside>
+    </div>
+
+    <section class="card" id="tips" style="margin-top:14px">
+      <div class="in">
+        <h2>Les 5 bons réflexes pour de meilleures réponses</h2>
+        <ul class="list">
+          <li class="li"><b>1) Sois précis</b> : “Explique-moi X en 5 points, avec un exemple.”</li>
+          <li class="li"><b>2) Donne le contexte</b> : pour qui ? pour quoi faire ? en quelle longueur ?</li>
+          <li class="li"><b>3) Demande un format</b> : liste, tableau, étapes, résumé, etc.</li>
+          <li class="li"><b>4) Demande une vérification</b> : “Qu’est-ce qui est incertain ? Quelles hypothèses tu fais ?”</li>
+          <li class="li"><b>5) Fais itérer</b> : “Plus court”, “plus simple”, “avec une métaphore”, “avec un exemple concret”.</li>
+        </ul>
+
+        <div class="hr"></div>
+
+        <details>
+          <summary>Exemple de “super question”</summary>
+          <p class="muted" style="margin-top:8px">
+            “Explique-moi ce qu’est un modèle de langage, en 6 lignes max, sans jargon.
+            Ajoute une métaphore, puis 2 limites importantes.”
+          </p>
+        </details>
+      </div>
+    </section>
+
+    <section class="card" id="quiz" style="margin-top:14px">
+      <div class="in">
+        <h2>Mini-quiz (2 minutes)</h2>
+        <p class="muted">Réponds, puis regarde l’explication. Pas de note, promis.</p>
+
+        <div class="quiz">
+          <div class="q" data-answer="b">
+            <b>1) Une IA peut “inventer” des informations ?</b>
+            <div class="opt">
+              <button onclick="pick(this,'a')">A) Non, jamais</button>
+              <button onclick="pick(this,'b')">B) Oui, parfois</button>
+              <button onclick="pick(this,'c')">C) Seulement le dimanche</button>
+            </div>
+            <div class="muted" style="margin-top:10px; display:none"></div>
+          </div>
+
+          <div class="q" data-answer="a">
+            <b>2) Pour avoir de meilleures réponses, il vaut mieux…</b>
+            <div class="opt">
+              <button onclick="pick(this,'a')">A) Donner un contexte + un format</button>
+              <button onclick="pick(this,'b')">B) Écrire “vas-y”</button>
+              <button onclick="pick(this,'c')">C) Écrire en majuscules</button>
+            </div>
+            <div class="muted" style="margin-top:10px; display:none"></div>
+          </div>
+
+          <div class="q" data-answer="c">
+            <b>3) L’IA est surtout forte pour…</b>
+            <div class="opt">
+              <button onclick="pick(this,'a')">A) Lire dans les pensées</button>
+              <button onclick="pick(this,'b')">B) Remplacer ton médecin</button>
+              <button onclick="pick(this,'c')">C) Reformuler, structurer, expliquer</button>
+            </div>
+            <div class="muted" style="margin-top:10px; display:none"></div>
+          </div>
+        </div>
+      </div>
+    </section>
+
+    <section class="card" id="ask" style="margin-top:14px">
+      <div class="in">
+        <h2>Pose une question à l’IA (version pédagogique)</h2>
+        <p class="muted">
+          Écris une question simple. Exemple : <i>“Explique-moi l’IA comme si j’étais au collège.”</i><br>
+          <span class="muted">⚙️ Cette page appelle ton webhook n8n. Si tu l’héberges, pense à sécuriser l’accès.</span>
+        </p>
+
+        <div class="qa">
+          <textarea id="question" placeholder="Tape ta question ici…"></textarea>
+
+          <div class="row">
+            <button class="btnPrimary" id="sendBtn" onclick="ask()">Envoyer</button>
+            <button onclick="fillExample()">Mettre un exemple</button>
+            <span class="status" id="status"></span>
+          </div>
+
+          <div class="answer" id="answer" aria-live="polite"></div>
+
+          <details>
+            <summary>🔒 Confidentialité (important)</summary>
+            <p class="muted" style="margin-top:8px">
+              Évite de mettre ici des infos sensibles (adresse, santé, numéros, secrets).
+              Si tu veux, je peux t’aider à ajouter une <b>clé d’accès</b> (token) pour éviter que n’importe qui appelle ton webhook.
+            </p>
+          </details>
+        </div>
+      </div>
+    </section>
+
+    <footer>
+      <div class="hr"></div>
+      Fait maison. Si tu veux, je peux aussi te faire une version “super minimaliste” ou une version “plus fun” (mèmes inclus 😄).
+    </footer>
+  </div>
+
+  <script>
+    // ✅ À MODIFIER : mets ici l’URL EXACTE de ton webhook n8n (production)
+    // Exemple: "https://ton-domaine/webhook/ia-pedagogique"
+    const WEBHOOK_URL = "https://n8n.srv803340.hstgr.cloud/webhook/ia-pedagogique";
+
+    const $q = (id) => document.getElementById(id);
+
+    function setStatus(text, kind){
+      const el = $("status");
+      el.className = "status " + (kind || "");
+      el.innerHTML = text || "";
+    }
+
+    function fillExample(){
+      const examples = [
+        "Explique-moi l’IA comme si j’étais au collège, en 5 points.",
+        "Donne-moi 3 exemples concrets d’usage de l’IA au quotidien (famille, travail, loisirs).",
+        "Pourquoi l’IA peut se tromper ? Explique avec une métaphore simple.",
+        "Écris un message sympa pour demander de l’aide à quelqu’un, ton amical, 4 lignes.",
+        "Résume ce texte en 5 bullet points : (colle ton texte après les deux points)"
+      ];
+      $("question").value = examples[Math.floor(Math.random() * examples.length)];
+      $("question").focus();
+    }
+
+    async function ask(){
+      const question = $("question").value.trim();
+      if(!question){
+        setStatus("Dis-moi une question 🙂", "err");
+        $("answer").textContent = "";
+        return;
+      }
+
+      $("sendBtn").disabled = true;
+      setStatus('<span class="spinner"></span>Je réfléchis…', "");
+      $("answer").textContent = "";
+
+      try{
+        const res = await fetch(WEBHOOK_URL, {
+          method: "POST",
+          headers: {
+            "Content-Type": "application/json"
+            // ✅ Optionnel : si tu ajoutes une sécurité côté n8n, tu peux envoyer un token ici:
+            // , "x-api-key": "ia-pedago-9c3a4f2d8e17b6"
+          },
+          body: JSON.stringify({ question })
+        });
+
+        if(!res.ok){
+          const txt = await res.text().catch(()=> "");
+          throw new Error("HTTP " + res.status + (txt ? " — " + txt : ""));
+        }
+
+        // Ton node Respond renvoie un texte JSON du type: { "answer": "..." }
+        const data = await res.json().catch(async ()=>{
+          // au cas où ça répondrait en text/plain
+          const txt = await res.text();
+          return JSON.parse(txt);
+        });
+
+        const answer = (data && data.answer) ? data.answer : "Je n’ai pas réussi à récupérer une réponse 😅";
+        $("answer").textContent = answer;
+        setStatus("✅ Réponse reçue", "ok");
+      } catch(err){
+        $("answer").textContent = "";
+        setStatus("❌ Oups : " + (err?.message || "erreur inconnue"), "err");
+      } finally{
+        $("sendBtn").disabled = false;
+      }
+    }
+
+    function pick(btn, choice){
+      const q = btn.closest(".q");
+      const correct = q.getAttribute("data-answer");
+      const feedback = q.querySelector(".muted");
+      const opts = q.querySelectorAll("button");
+
+      opts.forEach(b=>{
+        b.style.opacity = "0.85";
+        b.style.borderColor = "rgba(255,255,255,.12)";
+      });
+
+      if(choice === correct){
+        btn.style.borderColor = "rgba(43,213,118,.8)";
+        btn.style.opacity = "1";
+        feedback.style.display = "block";
+        feedback.textContent = "✅ Exact. L’IA peut être utile, mais elle peut aussi se tromper : on vérifie quand c’est important.";
+      } else {
+        btn.style.borderColor = "rgba(255,77,109,.8)";
+        btn.style.opacity = "1";
+        feedback.style.display = "block";
+        feedback.textContent = "❌ Pas tout à fait. Retient surtout : l’IA peut se tromper, et plus tu donnes un bon contexte, mieux elle répond.";
+      }
+    }
+  </script>
+</body>
+</html>
