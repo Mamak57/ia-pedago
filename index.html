@@ -398,16 +398,14 @@
       $("answer").textContent = "";
 
       try{
-        const res = await fetch(WEBHOOK_URL, {
-          method: "POST",
-          headers: {
-            headers: {
-  "Content-Type": "application/json",
-  "x-api-key": "ia-pedago-9c3a4f2d8e17b6"
-},
-          body: JSON.stringify({ question })
-        });
-
+    const res = await fetch(WEBHOOK_URL, {
+  method: "POST",
+  headers: {
+    "Content-Type": "application/json",
+    "x-api-key": "ia-pedago-9c3a4f2d8e17b6"
+  },
+  body: JSON.stringify({ question })
+});
         if(!res.ok){
           const txt = await res.text().catch(()=> "");
           throw new Error("HTTP " + res.status + (txt ? " — " + txt : ""));
@@ -469,5 +467,6 @@
   </script>
 </body>
 </html>
+
 
 
