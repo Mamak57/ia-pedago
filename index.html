@@ -401,10 +401,10 @@
         const res = await fetch(WEBHOOK_URL, {
           method: "POST",
           headers: {
-            "Content-Type": "application/json"
-            // ✅ Optionnel : si tu ajoutes une sécurité côté n8n, tu peux envoyer un token ici:
-            // , "x-api-key": "ia-pedago-9c3a4f2d8e17b6"
-          },
+            headers: {
+  "Content-Type": "application/json",
+  "x-api-key": "ia-pedago-9c3a4f2d8e17b6"
+},
           body: JSON.stringify({ question })
         });
 
@@ -469,4 +469,5 @@
   </script>
 </body>
 </html>
+
 
